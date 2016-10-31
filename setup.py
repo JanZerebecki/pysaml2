@@ -17,6 +17,7 @@ install_requires = [
     'pytz',
     'pyOpenSSL',
     'python-dateutil',
+    'defusedxml',
     'six'
 ]
 

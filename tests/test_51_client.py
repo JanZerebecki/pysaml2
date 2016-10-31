@@ -4,6 +4,8 @@
 import base64
 import uuid
 import six
+from pytest import raises
+
 from six.moves.urllib.parse import parse_qs, urlencode, urlparse
 from saml2.cert import OpenSSLWrapper
 from saml2.xmldsig import SIG_RSA_SHA256
@@ -21,6 +23,7 @@ from saml2.assertion import Assertion
 from saml2.authn_context import INTERNETPROTOCOLPASSWORD
 from saml2.client import Saml2Client
 from saml2.config import SPConfig
+from saml2.pack import parse_soap_enveloped_saml
 from saml2.response import LogoutResponse
 from saml2.saml import NAMEID_FORMAT_PERSISTENT, EncryptedAssertion, Advice
 from saml2.saml import NAMEID_FORMAT_TRANSIENT
@@ -33,6 +36,8 @@ from saml2.sigver import verify_redirect_signature
 from saml2.s_utils import do_attribute_statement
 from saml2.s_utils import factory
 from saml2.time_util import in_a_while, a_while_ago
+
+from defusedxml.common import EntitiesForbidden
 
 from fakeIDP import FakeIDP
 from fakeIDP import unpack_form
@@ -1445,6 +1450,17 @@ class TestClientWithDummy():
             'http://www.example.com/login'
         assert ac.authn_context_class_ref.text == INTERNETPROTOCOLPASSWORD
 
+def test_parse_soap_enveloped_saml_xxe():
+    xml = """<?xml version="1.0"?>
+    <!DOCTYPE lolz [
+    <!ENTITY lol "lol">
+    <!ELEMENT lolz (#PCDATA)>
+    <!ENTITY lol1 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+    ]>
+    <lolz>&lol1;</lolz>
+    """
+    with raises(EntitiesForbidden):
+        parse_soap_enveloped_saml(xml, None)
 
 # if __name__ == "__main__":
 #     tc = TestClient()
