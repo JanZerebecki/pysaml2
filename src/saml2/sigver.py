@@ -950,6 +950,7 @@ class CryptoBackendXmlSec1(CryptoBackend):
 
         if self.debug:
             com_list.append("--store-signatures")
+            '--enabled-key-data', 'raw-x509-cert',
 
         if node_id:
             com_list.extend(["--node-id", node_id])
