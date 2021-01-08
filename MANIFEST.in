@@ -5,3 +5,5 @@ include TODO
 recursive-include tests *
 recursive-include example *
 recursive-include doc *
+
+include src/saml2/data/templates/*.xml
