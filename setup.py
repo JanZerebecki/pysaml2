@@ -41,13 +41,14 @@ setup(
     license='Apache 2.0',
     url='https://github.com/rohe/pysaml2',
 
-    packages=['saml2', 'saml2/xmldsig', 'saml2/xmlenc', 'saml2/s2repoze',
+    packages=['saml2', 'saml2/data/schemas', 'saml2/xmldsig', 'saml2/xmlenc',
+              'saml2/s2repoze',
               'saml2/s2repoze.plugins', "saml2/profile", "saml2/schema",
               "saml2/extension", "saml2/attributemaps", "saml2/authn_context",
               "saml2/entity_category", "saml2/userinfo", "saml2/ws"],
 
     package_dir={'': 'src'},
-    package_data={'': ['xml/*.xml']},
+    package_data={'': ['*.xml', '*.xsd']},
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: Apache Software License",

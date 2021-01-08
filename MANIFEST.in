@@ -7,3 +7,4 @@ recursive-include example *
 recursive-include doc *
 
 include src/saml2/data/templates/*.xml
+include src/saml2/data/schemas/*.xsd
