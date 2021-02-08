@@ -1,37 +1,32 @@
-from importlib_resources import path as _resource_path
+import inspect
+import os.path
 
 from xmlschema import XMLSchema as _XMLSchema
 from xmlschema.exceptions import XMLSchemaException as XMLSchemaError
 
 import saml2.data.schemas as _data_schemas
 
-
 def _create_xml_schema_validator(source, **kwargs):
-    kwargs = {
-        **kwargs,
+    kwargs.update({
         "validation": "strict",
         "locations": _locations,
         "base_url": source,
         "allow": "sandbox",
-        "use_fallback": False,
-    }
+    })
     return _XMLSchema(source, **kwargs)
 
 
-with _resource_path(_data_schemas, "xml.xsd") as fp:
-    _path_schema_xml = str(fp)
-with _resource_path(_data_schemas, "envelope.xsd") as fp:
-    _path_schema_envelope = str(fp)
-with _resource_path(_data_schemas, "xenc-schema.xsd") as fp:
-    _path_schema_xenc = str(fp)
-with _resource_path(_data_schemas, "xmldsig-core-schema.xsd") as fp:
-    _path_schema_xmldsig_core = str(fp)
-with _resource_path(_data_schemas, "saml-schema-assertion-2.0.xsd") as fp:
-    _path_schema_saml_assertion = str(fp)
-with _resource_path(_data_schemas, "saml-schema-metadata-2.0.xsd") as fp:
-    _path_schema_saml_metadata = str(fp)
-with _resource_path(_data_schemas, "saml-schema-protocol-2.0.xsd") as fp:
-    _path_schema_saml_protocol = str(fp)
+def _resource_path_str(package, resource):
+    return os.path.join(os.path.dirname(inspect.getabsfile(package)), resource)
+
+
+_path_schema_xml = _resource_path_str(_data_schemas, "xml.xsd")
+_path_schema_envelope = _resource_path_str(_data_schemas, "envelope.xsd")
+_path_schema_xenc = _resource_path_str(_data_schemas, "xenc-schema.xsd")
+_path_schema_xmldsig_core = _resource_path_str(_data_schemas, "xmldsig-core-schema.xsd")
+_path_schema_saml_assertion = _resource_path_str(_data_schemas, "saml-schema-assertion-2.0.xsd")
+_path_schema_saml_metadata = _resource_path_str(_data_schemas, "saml-schema-metadata-2.0.xsd")
+_path_schema_saml_protocol = _resource_path_str(_data_schemas, "saml-schema-protocol-2.0.xsd")
 
 _locations = {
     "http://www.w3.org/XML/1998/namespace": _path_schema_xml,
@@ -42,12 +37,9 @@ _locations = {
     "urn:oasis:names:tc:SAML:2.0:protocol": _path_schema_saml_protocol,
 }
 
-with _resource_path(_data_schemas, "saml-schema-assertion-2.0.xsd") as fp:
-    schema_saml_assertion = _create_xml_schema_validator(str(fp))
-with _resource_path(_data_schemas, "saml-schema-metadata-2.0.xsd") as fp:
-    schema_saml_metadata = _create_xml_schema_validator(str(fp))
-with _resource_path(_data_schemas, "saml-schema-protocol-2.0.xsd") as fp:
-    schema_saml_protocol = _create_xml_schema_validator(str(fp))
+schema_saml_assertion = _create_xml_schema_validator(_resource_path_str(_data_schemas, "saml-schema-assertion-2.0.xsd"))
+schema_saml_metadata = _create_xml_schema_validator(_resource_path_str(_data_schemas, "saml-schema-metadata-2.0.xsd"))
+schema_saml_protocol = _create_xml_schema_validator(_resource_path_str(_data_schemas, "saml-schema-protocol-2.0.xsd"))
 
 
 node_to_schema = {
