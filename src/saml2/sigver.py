@@ -1547,7 +1547,7 @@ class SecurityContext(object):
                 "type": node_name,
                 "document": decoded_xml,
             }
-            raise SignatureError(error_context) from e
+            six.raise_from(SignatureError(error_context), e)
 
         try:
             _schema.validate(str(item))
@@ -1559,7 +1559,7 @@ class SecurityContext(object):
                 "type": node_name,
                 "document": decoded_xml,
             }
-            raise SignatureError(error_context) from e
+            six.raise_from(SignatureError(error_context), e)
 
         # saml-core section "5.4 XML Signature Profile" defines constrains on the
         # xmldsig-core facilities. It explicitly dictates that enveloped signatures
